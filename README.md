@@ -1,13 +1,13 @@
 <!--
-https://pypi.org/project/readme-generator/
-https://pypi.org/project/python-readme-generator/
+https://readme42.com
 -->
+
 
 [![](https://img.shields.io/pypi/v/django-github-oauth.svg?maxAge=3600)](https://pypi.org/project/django-github-oauth/)
 [![](https://img.shields.io/badge/License-Unlicense-blue.svg?longCache=True)](https://unlicense.org/)
-[![Travis](https://api.travis-ci.org/andrewp-as-is/django-github-oauth.py.svg?branch=master)](https://travis-ci.org/andrewp-as-is/django-github-oauth.py/)
+[![](https://github.com/andrewp-as-is/django-github-oauth.py/workflows/tests42/badge.svg)](https://github.com/andrewp-as-is/django-github-oauth.py/actions)
 
-#### Installation
+### Installation
 ```bash
 $ [sudo] pip install django-github-oauth
 ```
@@ -25,6 +25,7 @@ GITHUB_OAUTH_SCOPES = []
 AUTH_USER_MODEL = 'django_github_oauth.User'
 AUTHENTICATION_BACKENDS = ('django_passwordless_auth.backend.PasswordlessAuthBackend',)
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 ```
 
 [django-github-oauth-configuration (django-configurations)](https://pypi.org/project/django-github-oauth-configuration/)
@@ -74,5 +75,5 @@ class GithubOAuthCallbackView(GithubOAuthCallbackView):
 +   [github.com/settings/developers](https://github.com/settings/developers)
 
 <p align="center">
-    <a href="https://pypi.org/project/python-readme-generator/">python-readme-generator</a>
+    <a href="https://readme42.com/">readme42.com</a>
 </p>
