@@ -28,8 +28,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ```
 
-[django-github-oauth-configuration (django-configurations)](https://pypi.org/project/django-github-oauth-configuration/)
-
 ##### `urls.py`
 ```python
 urlpatterns+= [
@@ -70,8 +68,16 @@ class GithubOAuthCallbackView(GithubOAuthCallbackView):
         ...
 ```
 
+#### Examples
+custom User model
+```python
+from django_github_oauth.models import AbstractUser
+
+class User(AbstractUser):
+    ...
+```
+
 #### Links
-+   [django-github-oauth-configuration (django-configurations)](https://pypi.org/project/django-github-oauth-configuration/)
 +   [github.com/settings/developers](https://github.com/settings/developers)
 
 <p align="center">
