@@ -36,7 +36,7 @@ class OAuthClient(object):
             'response_type': 'code'
         })
 
-    def get_access_token(self, code):
+    def get_token(self, code):
         data = {
             'code': code,
             'client_id': self.get_client_id(),

@@ -46,6 +46,11 @@ class GithubOAuthLoginView(GithubOAuthMixin, View):
 class GithubOAuthCallbackView(GithubOAuthMixin, View):
     backend = None
 
+    def dispatch(self, *args, **kwargs):
+        self.token = self.get_token()
+        self.data = self.get_data(self.token)
+        return super().dispatch(*args, **kwargs)
+
     def get_backend(self):
         if self.backend:
             return backend
@@ -55,24 +60,40 @@ class GithubOAuthCallbackView(GithubOAuthMixin, View):
     def get_user_model(self):
         return get_user_model()
 
-    def get_login_redirect_url(self):
+    def get_redirect_url(self):
         return settings.LOGIN_REDIRECT_URL if settings.LOGIN_REDIRECT_URL else '/'
 
-    def get_access_token(self):
+    def get_token(self):
         client = self.get_client()
-        return client.get_access_token(self.request.GET['code'])
+        return client.get_token(self.request.GET['code'])
 
-    def get(self, request, *args, **kwargs):
-        token = self.get_access_token()
-        headers = {'Authorization': 'token %s' % token}
-        r = requests.get('https://api.github.com/user', headers=headers)
-        data = r.json()
-        defaults = dict(login=data['login'], token=token)
-        user_model = self.get_user_model()
-        user, _ = user_model.objects.update_or_create(defaults, id=data['id'])
+    def login(self, user):
         backend = self.get_backend()
         kwargs = {'backend': backend} if backend else {}
-        login(request, user, **kwargs)
-        if 'next' in request.GET:
-            return redirect(request.GET['next'])
-        return redirect(self.get_login_redirect_url())
+        login(self.request, user, **kwargs)
+
+    def get_data(self, token):
+        headers = {'Authorization': 'token %s' % token}
+        r = requests.get('https://api.github.com/user', headers=headers)
+        r.raise_for_status()
+        return r.json()
+
+    def redirect(self):
+        if 'next' in self.request.GET:
+            return redirect(self.request.GET['next'])
+        return redirect(self.get_redirect_url())
+
+    def get_user(self, data):
+        user_model = self.get_user_model()
+        defaults = {user_model.USERNAME_FIELD: data['login']}
+        user, _ = user_model.objects.update_or_create(defaults, id=data['id'])
+        return user
+
+    def save_token(self, user, token):
+        pass
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_user(self.data)
+        self.login(user)
+        self.save_token(user, self.token)
+        return self.redirect()
